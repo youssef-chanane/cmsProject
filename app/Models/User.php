@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Category;
+
 
 class User extends Authenticatable
 {
@@ -42,6 +45,12 @@ class User extends Authenticatable
     ];
 
     public function categories(){
-        return $this->hasMany('Category');
+        return $this->hasMany(Category::class);
+    }
+    public function scopeInteractiveUsers(Builder $query)
+    {
+        return $query->withCount(['categories'=>function(Builder $subquery){
+            return $subquery->whereBetween('created_at',[now()->subDays(10),now()]);
+        }])->orderBy('categories_count','desc');
     }
 }

@@ -18,11 +18,13 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $categories=Category::all();
+        $categories=Category::get();
+        $users=User::interactiveUsers()->take(5)->get();
 
         return view('categories.index',[
             'categories'=>$categories,
-            'tab'=>'list'
+            'tab'=>'list',
+            'interactiveUsers'=>$users
         ]);
     }
     //categories archived
@@ -45,7 +47,7 @@ class CategoriesController extends Controller
     //restore categorie
     public function restore($id){
        $category=Category::onlyTrashed()->where('id',$id)->first();
-       $this->authorize("category.update",$category);
+       $this->authorize("update",$category);
        $category->restore();
        $category->save();
        return redirect()->route('categories.index');
@@ -68,11 +70,14 @@ class CategoriesController extends Controller
      */
     public function store(RequestCategory $request)
     {
-        $user=Auth::User();
+        //$user=Auth::User();
 
-        $category= new Category;
-        $category->name=$request->name;
-        $category->user()->associate($user)->save();
+        //$category= new Category;
+        // $category->name=$request->name;
+        // $category->user()->associate($user)->save();
+        $data=$request->validated();
+        $data['user_id']=$request->user()->id;
+        Category::create($data);
         $request->session()->flash('success','category was created successfully!');
 
         return redirect()->route('categories.index');
@@ -98,7 +103,7 @@ class CategoriesController extends Controller
     public function edit($id)
     {
         $category=Category::find($id);
-        $this->authorize("category.update",$category);
+        $this->authorize("update",$category);
 
         return view('categories.edit',['category'=>$category]);
     }
@@ -116,7 +121,7 @@ class CategoriesController extends Controller
         // if(Gate::denies('category.update',$category)){
         //     return abort(403,"you can't edit this category");
         // }
-        $this->authorize("category.update",$category);
+        $this->authorize("update",$category);
         $category->name=$request->name;
         $category->save();
         $request->session()->flash('success','category was updated successfully!');
@@ -133,13 +138,13 @@ class CategoriesController extends Controller
     {
         $category=Category::find($id);
         Category::destroy($id);
-        $this->authorize("category.delete",$category);
+        $this->authorize("delete",$category);
         return redirect()->route('categories.index');
     }
     //physical delete
     public function delete($id){
         $category=Category::onlyTrashed()->where('id',$id)->first();
-        $this->authorize("category.delete",$category);
+        $this->authorize("forceDelete",$category);
         $category->forceDelete();
         return redirect()->route('categories.index');
 

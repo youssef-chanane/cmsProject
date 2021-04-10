@@ -27,6 +27,8 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
+                <a href="{{route('categories.index')}}" class="navbar">categories</a>
+                <a href="{{route('posts.index')}}" class="navbar">posts</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -81,18 +83,7 @@
                             {{session()->get('success')}}
                         </div>
                     @endif
-                    <div class="row">
-                        <div class="col-md-4">
-                            <ul class="list-group">
-                                <li class="list-group-item"><a href="{{route('posts.index')}}">posts</a></li>
-                                <li class="list-group-item"><a href="{{route('categories.index')}}">categories</a></li>
-                            </ul>
-                        </div>
-                    
-                        <div class="col-md-8">
-                            @yield('content')
-                        </div>
-                    </div>
+                    @yield('content')
                 </div>
             @else    
                 @yield('content')

@@ -13,7 +13,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        'App\Models\Category' => 'App\Policies\CategoryPolicy',
     ];
 
     /**
@@ -25,7 +25,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::resource('category','App\Policies\CategoryPolicy');
+        // Gate::resource('category','App\Policies\CategoryPolicy');
         // Gate::define("category.update",function($user,$category){
         //     return $user->id===$category->user_id;
         // });
@@ -33,7 +33,7 @@ class AuthServiceProvider extends ServiceProvider
         //     return $user->id===$category->user_id;
         // });
         Gate::before(function($user,$ability){
-            if($user->is_admin && in_array($ability,['category.update'])){
+            if($user->is_admin && in_array($ability,['update','restore','delete'])){
                 return true;
             }
         });

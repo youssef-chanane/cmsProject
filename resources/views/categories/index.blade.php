@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
-    <div class="d-flex justify-content-end mb-2">
+<div class="row">
+  <div class="col-8"><div class="d-flex justify-content-end mb-2">
         <a href="{{route('categories.create')}}" class="btn btn-success">Add Category</a>
     </div>
     <div class="card card-default">
@@ -18,27 +19,39 @@
                            {{$category->name}}
                            <p class="fs-5 fst-italic text-muted">created by : {{$category->user->name}}</p> 
                            @if(!$category->deleted_at)
-                                <a href="{{route('categories.edit',$category->id
-                                )}}" class="btn btn-success">EDIT</a>
-                                
-                                <form class="d-inline" action="{{route('categories.destroy',$category->id
-                                )}}" method="POST" >
-                                   @csrf
-                                   @method('DELETE')
-                                   <button class="btn btn-primary">archive</button>
-                               </form>
+                                @can("update",$category)
+                                  <a href="{{route('categories.edit',$category->id
+                                  )}}" class="btn btn-success">EDIT</a>
+                                @endcan
+                                @can("delete",$category)
+                                  <form class="d-inline" action="{{route('categories.destroy',$category->id
+                                  )}}" method="POST" >
+                                     @csrf
+                                     @method('DELETE')
+                                     <button class="btn btn-primary">archive</button>
+                                 </form>
+                               @endcan
                             @else
-                               
-                               <form class="d-inline" action="{{route('categories.restore',$category->id
-                                )}}" method="POST" >
-                                   @csrf
-                                   @method('PATCH')
-                                   <input type="submit" value="restore" class="btn btn-success" />
-                               </form>
-                               <button type="button" class="btn btn-danger" id="handleDeleteModal">
+                               @can("restore",$category)
+                                 <form class="d-inline" action="{{route('categories.restore',$category->id
+                                  )}}" method="POST" >
+                                     @csrf
+                                     @method('PATCH')
+                                     <input type="submit" value="restore" class="btn btn-success" />
+                                 </form>
+                               @endcan
+                               @can("forceDelete",$category)
+                                 <form class="d-inline" action="{{route('categories.delete',$category->id
+                                  )}}" method="POST" >
+                                      @csrf
+                                      @method('DELETE')
+                                      <button class="btn btn-danger">delete</button>
+                                  </form>
+                                @endcan
+                               {{-- <button type="button" class="btn btn-danger" id="handleDeleteModal">
                                 delete
-                              </button>
-                              <!-- Modal -->
+                              </button> --}}
+                              {{-- <!-- Modal -->
                                 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                       <div class="modal-content">
@@ -52,14 +65,14 @@
                                           <a type="button" class="btn btn-secondary" data-bs-dismiss="modal" href="{{route('categories.archive')}}">cancel</a>
                                           <form class="d-inline" action="{{route('categories.delete',$category->id
                                             )}}" method="POST" >
-                                                 @csrf
+                                                @csrf
                                                 @method('DELETE')
                                                 <button class="btn btn-danger">delete</button>
                                             </form>
                                         </div>
                                       </div>
                                     </div>
-                                  </div>
+                                  </div> --}}
                             @endif
 
                        
@@ -73,14 +86,30 @@
   
   
     </div>
-
+</div>
+  <div class="col-4">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Most Interactive users</h4>
+      </div>
+      <ul class="list-group list-group-flush">
+        @foreach($interactiveUsers as $user)
+          <li class="list-group-item">{{$user->name}}
+          <p class="text-muted">number of posts :<span class="badge badge-success">{{$user->categories_count}}</span></p>
+          </li>
+        @endforeach
+      </ul>
+    </div>
+  </div>
+</div>
+    
 @endsection
 
 @section('script')
-    <script>
+    {{-- <script>
         let btn=document.getElementById("handleDeleteModal");
         btn.addEventListener('click',function(){
             $('#deleteModal').modal('show');
         });
-    </script>
+    </script> --}}
 @endsection
