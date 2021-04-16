@@ -8,9 +8,13 @@ use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class CategoriesController extends Controller
 {
+    public function __construct(){
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -18,31 +22,50 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $categories=Category::get();
-        $users=User::interactiveUsers()->take(5)->get();
+        $categories=Cache::remember('categories',now()->addSeconds(100),function(){
+            return Category::take(10)->get();
+        });
+        
+        $interactiveUsers=Cache::remember('interactiveUsers',now()->addSeconds(100),function(){
+            return User::interactiveUsers()->take(5)->get();
+        });
 
         return view('categories.index',[
             'categories'=>$categories,
             'tab'=>'list',
-            'interactiveUsers'=>$users
+            'interactiveUsers'=>$interactiveUsers
         ]);
     }
     //categories archived
     public function archive(){
-        $categories=Category::onlyTrashed()->get();
+        $categories=Cache::remember('categories',now()->addSeconds(10),function(){
+            return Category::onlyTrashed()->get();
+        });
         
+        $users=Cache::remember('interactiveUsers',now()->addHour(),function(){
+            return User::interactiveUsers()->take(5)->get();
+        });
         return view('categories.index',[
             'categories'=>$categories,
-            'tab'=>'archive'
-        ]);   
+            'tab'=>'archive',
+            'interactiveUsers'=>$users
+            ]);   
     }
 
     //all categories  
     public function all(){
-        $categories=Category::withTrashed()->get();
+        $categories=Cache::remember('categories',now()->addSeconds(10),function(){
+            return Category::withTrashed()->get();
+        });
+        
+        $users=Cache::remember('interactiveUsers',now()->addHour(),function(){
+            return User::interactiveUsers()->take(5)->get();
+        });
         return view('categories.index',[
             'categories'=>$categories,
-            'tab'=>'all']);    
+            'tab'=>'all',
+            'interactiveUsers'=>$users
+            ]);    
     }
     //restore categorie
     public function restore($id){

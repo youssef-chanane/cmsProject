@@ -4,14 +4,9 @@
         <div class="card-header">Create post</div>
         <div class="card-body">
             
-            <form action="{{route('posts.store')}}" method="POST" enctype="multipart/form-data">
-                @csrf
+            <x-form action="{{route('posts.store')}}" btnValue="Add Post">
                 @include('posts.form')
-                
-                <div class="form-group">
-                    <button class="btn btn-success">Add Post</button>
-                </div>
-            </form>
+            </x-form>
         </div>
     </div>
 @endsection

@@ -47,10 +47,15 @@ class User extends Authenticatable
     public function categories(){
         return $this->hasMany(Category::class);
     }
+    public function posts(){
+        return $this->hasMany(Post::class);
+    }
     public function scopeInteractiveUsers(Builder $query)
     {
         return $query->withCount(['categories'=>function(Builder $subquery){
             return $subquery->whereBetween('created_at',[now()->subDays(10),now()]);
         }])->orderBy('categories_count','desc');
     }
+
+   
 }

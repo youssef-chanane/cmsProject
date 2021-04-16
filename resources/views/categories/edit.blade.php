@@ -4,15 +4,10 @@
         <div class="card-header">Update category</div>
         <div class="card-body">
             
-            <form action="{{route('categories.update',$category->id)}}" method="POST">
-                @csrf
+            <x-form action="{{route('categories.update',$category->id)}}" btnValue="Update Category">
                 @method('PUT')
                 @include('categories.form')
-               
-                <div class="form-group">
-                    <button class="btn btn-success">Update Category</button>
-                </div>
-            </form>
+            </x-form>
         </div>
     </div>
 @endsection

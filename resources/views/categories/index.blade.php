@@ -7,9 +7,9 @@
     <div class="card card-default">
         <div class="card-header">Categories
             <nav class="nav nav-tabs nav-stacked my-5">
-                <a href="{{route('categories.index')}}" class="nav-link @if($tab=='list') active @endif">Categories</a>
-                <a href="{{route('categories.archive')}}" class="nav-link @if($tab=='archive') active @endif">Archive</a>
-                <a href="{{route('categories.all')}}" class="nav-link @if($tab=='all') active @endif">All Categories</a>
+                <x-nav-link type="index" tab={{$tab}} active="list">Categories</x-nav-link>
+                <x-nav-link type="archive" tab={{$tab}} active="archive">archive</x-nav-link>
+                <x-nav-link type="all" tab={{$tab}} active="all">all</x-nav-link>
             </nav>
         </div>
         <div class="card-body">
@@ -95,7 +95,9 @@
       <ul class="list-group list-group-flush">
         @foreach($interactiveUsers as $user)
           <li class="list-group-item">{{$user->name}}
-          <p class="text-muted">number of posts :<span class="badge badge-success">{{$user->categories_count}}</span></p>
+          <p class="text-muted">number of posts :
+            <x-badge type="success">{{$user->categories_count}}</x-badge>
+          </p>
           </li>
         @endforeach
       </ul>
