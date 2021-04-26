@@ -1,1 +1,1 @@
-<a href="{{route("categories.$type")}}" class="nav-link @if($tab==$active) active @endif" >{{$slot}}</a>
+<a href="{{route("$route")}}" class="nav-link @if($tab==$active) active @endif" >{{$slot}}</a>

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -16,9 +17,11 @@ class PostsTableSeeder extends Seeder
     public function run()
     {
         $users=User::all();
-        Post::factory(30)->make()->each(
-            function($post) use ($users){
+        $categories=Category::all();
+        Post::factory(50)->make()->each(
+            function($post) use ($users,$categories){
                 $post->user_id=$users->random()->id;
+                $post->category_id=$categories->random()->id;
                 $post->save();
             }
         );

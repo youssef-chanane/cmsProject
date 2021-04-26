@@ -22,50 +22,38 @@ class CategoriesController extends Controller
      */
     public function index()
     {
-        $categories=Cache::remember('categories',now()->addSeconds(100),function(){
-            return Category::take(10)->get();
-        });
+        //utilisation du cache
+        // $categories=Cache::remember('categories',now()->addSeconds(100),function(){
+        //     return Category::take(10)->withCount('post')->get();
+        // });
+        $categories=Category::withCount('posts')->get();
         
-        $interactiveUsers=Cache::remember('interactiveUsers',now()->addSeconds(100),function(){
-            return User::interactiveUsers()->take(5)->get();
-        });
 
         return view('categories.index',[
             'categories'=>$categories,
             'tab'=>'list',
-            'interactiveUsers'=>$interactiveUsers
         ]);
     }
     //categories archived
     public function archive(){
-        $categories=Cache::remember('categories',now()->addSeconds(10),function(){
-            return Category::onlyTrashed()->get();
-        });
-        
-        $users=Cache::remember('interactiveUsers',now()->addHour(),function(){
-            return User::interactiveUsers()->take(5)->get();
-        });
+        $categories=Category::onlyTrashed()->get();
+                
         return view('categories.index',[
             'categories'=>$categories,
             'tab'=>'archive',
-            'interactiveUsers'=>$users
+            // 'interactiveUsers'=>$users
             ]);   
     }
 
     //all categories  
     public function all(){
-        $categories=Cache::remember('categories',now()->addSeconds(10),function(){
-            return Category::withTrashed()->get();
-        });
         
-        $users=Cache::remember('interactiveUsers',now()->addHour(),function(){
-            return User::interactiveUsers()->take(5)->get();
-        });
+        $categories=Category::withTrashed()->get();
+        
         return view('categories.index',[
             'categories'=>$categories,
             'tab'=>'all',
-            'interactiveUsers'=>$users
-            ]);    
+        ]);    
     }
     //restore categorie
     public function restore($id){
@@ -93,11 +81,6 @@ class CategoriesController extends Controller
      */
     public function store(RequestCategory $request)
     {
-        //$user=Auth::User();
-
-        //$category= new Category;
-        // $category->name=$request->name;
-        // $category->user()->associate($user)->save();
         $data=$request->validated();
         $data['user_id']=$request->user()->id;
         Category::create($data);

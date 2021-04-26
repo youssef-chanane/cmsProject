@@ -19,7 +19,11 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ mix('css/theme.css') }}" rel="stylesheet">
-</head>
+    
+    {{-- <link rel="stylesheet" href="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.css"> --}}
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+{{-- </head> --}}
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
@@ -29,6 +33,7 @@
                 </a>
                 <a href="{{route('categories.index')}}" class="navbar">categories</a>
                 <a href="{{route('posts.index')}}" class="navbar">posts</a>
+                <a href="{{route('tags.index')}}" class="navbar">tags</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -78,9 +83,16 @@
         <main class="py-4">
             @auth
                 <div class="container">
+                    {{-- success session --}}
                     @if(session()->has('success'))
                         <div class="alert alert-success">
                             {{session()->get('success')}}
+                        </div>
+                    @endif
+                    {{-- error session --}}
+                    @if(session()->has('error'))
+                        <div class="alert alert-danger">
+                            {{session()->get('error')}}
                         </div>
                     @endif
                     @yield('content')
@@ -90,6 +102,20 @@
             @endauth
         </main>
     </div>
-    @yield('script')
+    {{-- <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script> --}}
+    {{-- <script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script> --}}
+    {{-- <script>
+        $(function () {
+        $('select').multipleSelect()
+      })
+    </script>     --}}
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.basic-multiple').select2();
+        });
+    </script>
+    {{-- @yield('myScript') --}}
+       
 </body>
 </html>

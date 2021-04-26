@@ -19,6 +19,9 @@ class Category extends Model
     public function user(){
         return $this->belongsTo('App\Models\User');
     }
+    public function posts(){
+        return $this->hasMany(Post::class);
+    }
     // public function scopeDernier(Builder $query){
     //     return $query->orderBy("updated_at","desc");
     // }

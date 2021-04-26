@@ -18,7 +18,7 @@ class CategoriesTableSeeder extends Seeder
     public function run()
     {
         $users=User::all();
-        Category::factory(300)->make()->each(
+        Category::factory(20)->make()->each(
             function($category) use ($users){
                 $category->user_id=$users->random()->id;
                 $category->save();

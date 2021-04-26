@@ -12,6 +12,7 @@
                     <ul class="list-group d-flex flex-wrap justify-content-center flex-row">
                         @foreach ($posts as $post) 
                             <x-card src="{{$post->image}}" title="{{$post->title}}" description="" content="">
+                                <p>category: {{$post->category->name}}</p>
                                     <a href="{{route('posts.show',$post->id
                                         )}}" class="btn btn-success">SHOW</a>
                             </x-card>

@@ -12,3 +12,10 @@
         </div>
     </div>
 @endsection
+{{-- @section('myScript')
+    <script>
+        $(function () {
+        $('#tags').multipleSelect()
+      })
+    </script>
+@endsection --}}

@@ -28,4 +28,11 @@ Route::get('/categories/all', 'CategoriesController@all')->name('categories.all'
 Route::delete('/categories/{id}/delete', 'CategoriesController@delete')->name('categories.delete');
 Route::patch('/categories/{id}/restore', 'CategoriesController@restore')->name('categories.restore');
 Route::resource('/categories','CategoriesController');
+Route::get('/tags/archive', 'TagsController@archive')->name('tags.archive');
+Route::get('/tags/all', 'TagsController@all')->name('tags.all');
+Route::delete('/tags/{id}/delete', 'TagsController@delete')->name('tags.delete');
+Route::patch('/tags/{id}/restore', 'TagsController@restore')->name('tags.restore');
+Route::resource('/tags','TagsController');
 Route::resource('/posts','PostsController');
+
+Route::get('/post/tag/{id}','PostsTagController@index')->name('posts.tag.index');

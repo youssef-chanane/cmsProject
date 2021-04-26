@@ -7,9 +7,9 @@
     <div class="card card-default">
         <div class="card-header">Categories
             <nav class="nav nav-tabs nav-stacked my-5">
-                <x-nav-link type="index" tab={{$tab}} active="list">Categories</x-nav-link>
-                <x-nav-link type="archive" tab={{$tab}} active="archive">archive</x-nav-link>
-                <x-nav-link type="all" tab={{$tab}} active="all">all</x-nav-link>
+                <x-nav-link route="categories.index" tab={{$tab}} active="list">Categories</x-nav-link>
+                <x-nav-link route="categories.archive" tab={{$tab}} active="archive">archive</x-nav-link>
+                <x-nav-link route="categories.all" tab={{$tab}} active="all">all</x-nav-link>
             </nav>
         </div>
         <div class="card-body">
@@ -18,18 +18,21 @@
                    <li class="list-group-item">
                            {{$category->name}}
                            <p class="fs-5 fst-italic text-muted">created by : {{$category->user->name}}</p> 
+                           <p class="fs-5 fst-italic text-muted">number of posts : {{$category->posts_count}}</p> 
                            @if(!$category->deleted_at)
                                 @can("update",$category)
                                   <a href="{{route('categories.edit',$category->id
                                   )}}" class="btn btn-success">EDIT</a>
                                 @endcan
                                 @can("delete",$category)
+                                  @if($category->posts_count==0)
                                   <form class="d-inline" action="{{route('categories.destroy',$category->id
                                   )}}" method="POST" >
                                      @csrf
                                      @method('DELETE')
                                      <button class="btn btn-primary">archive</button>
                                  </form>
+                                 @endif
                                @endcan
                             @else
                                @can("restore",$category)

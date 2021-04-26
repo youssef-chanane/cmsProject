@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\RequestPost;
+use App\Http\Requests\RequestUpdatePost;
+use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +16,7 @@ class PostsController extends Controller
 {
     public function __construct(){
         $this->middleware('auth');
+        $this->middleware('verifyCategoriesCount')->only(['create','edit']);
     }
     /**
      * Display a listing of the resource.
@@ -32,7 +35,12 @@ class PostsController extends Controller
      */
     public function create()
     {
-        return view('posts.create');
+        $categories=Category::all();
+        $tags=Tag::all();
+        return view('posts.create',[
+            "categories"=>$categories,
+            "tags"=>$tags
+        ]);
     }
 
     /**
@@ -41,14 +49,19 @@ class PostsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(RequestPost $request)
+    public function store(RequestUpdatePost $request)
     {
-        //stocké l'image dans le dossier posts dans stprage
+        //stocké l'image dans le dossier posts dans storage
         $path=$request->file('image')->store('posts');
         $data=$request->only(['title','description','content']);
         $data['image']=Storage::url($path);
         $data['user_id']=$request->user()->id;
-        Post::create($data);
+        $data['category_id']=$request->category;
+        //dd($data);
+         //relier le post à des tags
+         $tags=$request->tags;
+         $post=Post::create($data);
+         $post->tags()->attach($tags);
         $request->session()->flash('success','post was created successefuly!');
         return redirect()->route('posts.index');
     }
@@ -61,13 +74,15 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        $post=Cache::remember("post-show-{$id}",60,function() use ($id){
-            return Post::find($id); 
-        });
-        //posts published by the same user
-        $posts=Cache::remember("posts-show-{$id}",60,function()use($post){
-            return Post::where('user_id',$post->user_id)->get(); 
-        });
+        $post=Post::find($id);
+        $posts=Post::where('user_id',$post->user_id)->get();
+        // $post=Cache::remember("post-show-{$id}",60,function() use ($id){
+        //     return Post::find($id); 
+        // });
+        // //posts published by the same user
+        // $posts=Cache::remember("posts-show-{$id}",60,function()use($post){
+        //     return Post::where('user_id',$post->user_id)->get(); 
+        // });
         return view('posts.show',[
             'post'=>$post,
             'postsOfUser'=>$posts
@@ -83,8 +98,13 @@ class PostsController extends Controller
     public function edit($id)
     {
         $post=Post::find($id);
+        $categories=Category::all();
+        $tags=Tag::all();
         return view('posts.edit',[
-            "post"=>$post
+            "post"=>$post,
+            "categories"=>$categories,
+            "tags"=>$tags
+
         ]);
     }
 
@@ -95,18 +115,23 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(RequestPost $request, $id)
+    public function update(RequestUpdatePost $request, $id)
     {
+        $data=$request->only(['title','description','content']);
         $post=Post::find($id);
         $this->authorize("update",$post);
-        Storage::delete($post->image);
-        $path=$request->file('image')->store('posts');
-        $post->title=$request->title;
-        $post->content=$request->content;
-        $post->description=$request->description;
-        $post->image=Storage::url($path);
-        $post->user_id=$request->user()->id;
-        $post->save();
+        if($request->hasFile('image')){
+            Storage::delete($post->image);
+            $path=$request->file('image')->store('posts');
+            $data['image']=Storage::url($path);
+        }
+        $data['user_id']=$request->user()->id;
+        $data['category_id']=$request->category;
+        //relier le post à des tags
+        $tags=$request->tags;
+        $post->tags()->sync($tags);
+         
+        $post->update($data);
         $request->session()->flash('success','post was updated successufuly !');
         return redirect()->route('posts.show',$post->id);
     }
@@ -122,7 +147,7 @@ class PostsController extends Controller
 
         $this->authorize("delete",Post::find($id));
         Post::destroy($id);
-        session()->flash('success','post was deleted successufuly !');
+        session()->flash('error','post was deleted successufuly !');
         return redirect()->route('posts.index');
     }
 }
