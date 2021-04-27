@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RequestUpdatePost;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
@@ -76,6 +77,9 @@ class PostsController extends Controller
     {
         $post=Post::find($id);
         $posts=Post::where('user_id',$post->user_id)->get();
+        $comments=Comment::take(5)->orderBy('updated_at','desc')->get();
+        $comment=Comment::first();
+        //utilisation du cache
         // $post=Cache::remember("post-show-{$id}",60,function() use ($id){
         //     return Post::find($id); 
         // });
@@ -85,7 +89,8 @@ class PostsController extends Controller
         // });
         return view('posts.show',[
             'post'=>$post,
-            'postsOfUser'=>$posts
+            'postsOfUser'=>$posts,
+            'comments'=>$comments
         ]);
     }
 

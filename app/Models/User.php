@@ -50,6 +50,10 @@ class User extends Authenticatable
     public function posts(){
         return $this->hasMany(Post::class);
     }
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
+    
     public function scopeInteractiveUsers(Builder $query)
     {
         return $query->withCount(['categories'=>function(Builder $subquery){

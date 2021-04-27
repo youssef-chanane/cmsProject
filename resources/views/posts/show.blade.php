@@ -6,7 +6,6 @@
             
             <div class="card card-default">
                 <div class="card-body">
-                    <ul class="list-group">
                             <x-card src="{{$post->image}}" title="{{$post->title}}" description="{{$post->description}}" content="{{$post->content}}">
                                 @can("update",$post)
                                     <a href="{{route('posts.edit',$post->id
@@ -21,8 +20,28 @@
                                     </form>
                                 @endcan
                             </x-card>
-                    </ul>
                 </div>
+            </div>
+            <div class="card text-left my-3">
+              <div class="card-body">
+                <h4 class="card-title">add Comment</h4>
+                <p class="card-text">
+                    @include('comments.form',['postId'=>$post->id])
+                </p>
+              </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Comments</h4>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach($comments as $comment)
+                        <li class="list-group-item">
+                            <p class="fs-5 fst-italic text-muted">{{$comment->user->name}}</p>
+                            {{$comment->content}}</li>
+                    
+                    @endforeach
+                </ul>
             </div>
         </div>
         <div class="col-4">

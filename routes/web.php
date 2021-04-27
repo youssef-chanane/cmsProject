@@ -36,3 +36,5 @@ Route::resource('/tags','TagsController');
 Route::resource('/posts','PostsController');
 
 Route::get('/post/tag/{id}','PostsTagController@index')->name('posts.tag.index');
+
+Route::post('comments/{id}','CommentsController@store')->name('comments.store');

@@ -24,6 +24,10 @@ class Post extends Model
     public function tags(){
         return $this->belongsToMany(Tag::class);
     }
+    //un post a plusieur commentaire
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
     public static function boot(){
         parent::boot();
         //vider le cache de show si l'utilisateur modifie le post

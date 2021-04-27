@@ -17,8 +17,8 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
     <!-- Styles -->
+    <link href="{{ asset('css/cerulean.min.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ mix('css/theme.css') }}" rel="stylesheet">
     
     {{-- <link rel="stylesheet" href="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.css"> --}}
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -102,20 +102,13 @@
             @endauth
         </main>
     </div>
-    {{-- <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script> --}}
-    {{-- <script src="https://unpkg.com/multiple-select@1.5.2/dist/multiple-select.min.js"></script> --}}
-    {{-- <script>
-        $(function () {
-        $('select').multipleSelect()
-      })
-    </script>     --}}
+    
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
             $('.basic-multiple').select2();
         });
     </script>
-    {{-- @yield('myScript') --}}
        
 </body>
 </html>
