@@ -6,7 +6,7 @@
             
             <div class="card card-default">
                 <div class="card-body">
-                            <x-card src="{{$post->image}}" title="{{$post->title}}" description="{{$post->description}}" content="{{$post->content}}">
+                            <x-card src="{{$post->image->path}}" title="{{$post->title}}" description="{{$post->description}}" content="{{$post->content}}">
                                 @can("update",$post)
                                     <a href="{{route('posts.edit',$post->id
                                         )}}" class="btn btn-success">EDIT</a>
@@ -53,7 +53,7 @@
                 @foreach($postsOfUser as $post)
                     <a class="m-2 text-muted text-decoration-none"href="{{route('posts.show',$post->id
                             )}}" >
-                        <x-card src="{{$post->image}}" title="{{$post->title}}" description="" content="1">
+                        <x-card src="{{isset($post->image) ? $post->image->path : ''}}" title="{{$post->title}}" description="" content="1">
                         </x-card>
                     </a>
                 @endforeach

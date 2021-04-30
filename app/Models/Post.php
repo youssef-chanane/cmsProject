@@ -13,7 +13,7 @@ class Post extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $fillable=['title','description','content','category_id','image','user_id'];
+    protected $fillable=['title','description','content','category_id','user_id'];
 
     public function user(){
         return $this->belongsTo(User::class);
@@ -27,6 +27,10 @@ class Post extends Model
     //un post a plusieur commentaire
     public function comments(){
         return $this->hasMany(Comment::class);
+    }
+    //relation polymorphic avec le tableau images
+    public function image(){
+        return $this->morphOne(Image::class,'imageable');
     }
     public static function boot(){
         parent::boot();

@@ -53,7 +53,9 @@ class User extends Authenticatable
     public function comments(){
         return $this->hasMany(Comment::class);
     }
-    
+    public function image(){
+        return $this->morphOne(Image::class,'imageable');
+    }
     public function scopeInteractiveUsers(Builder $query)
     {
         return $query->withCount(['categories'=>function(Builder $subquery){

@@ -62,12 +62,22 @@
                                     {{ Auth::user()->name }}
                                 </a>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
+                                <div class="dropdown-menu dropdown-menu-right" style="width: 300px;" aria-labelledby="navbarDropdown">
+                                    <div class="card text-center ">
+                                      <img class="rounded-circle mx-auto my-2" style="width: 100px;" src="{{isset(Auth::user()->image)?Auth::user()->image->path:''}}" alt="">
+                                      <div class="card-body">
+                                        <h4 class="card-title">{{ Auth::user()->name }}</h4>
+                                        <p class="card-text">
+                                            <a href="{{route('users.edit',Auth::user()->id)}}" class="mx-auto my-2 btn btn-success">Modify Profile</a>
+                                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                           onclick="event.preventDefault();
+                                                         document.getElementById('logout-form').submit();">
+                                            {{ __('Logout') }}
+                                            </a>
+                                        </p>
+                                      </div>
+                                    </div>
+                                    
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf

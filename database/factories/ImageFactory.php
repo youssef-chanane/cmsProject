@@ -2,18 +2,17 @@
 
 namespace Database\Factories;
 
-use App\Models\Post;
+use App\Models\Image;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Storage;
 
-class PostFactory extends Factory
+class ImageFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Post::class;
+    protected $model = Image::class;
 
     /**
      * Define the model's default state.
@@ -23,9 +22,7 @@ class PostFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->word(3),
-            'description' => $this->faker->text(200),
-            'content' => $this->faker->text(200),
+            'path'=>$this->faker->imageUrl( 640, 480)
         ];
     }
 }

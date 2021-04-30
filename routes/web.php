@@ -34,6 +34,7 @@ Route::delete('/tags/{id}/delete', 'TagsController@delete')->name('tags.delete')
 Route::patch('/tags/{id}/restore', 'TagsController@restore')->name('tags.restore');
 Route::resource('/tags','TagsController');
 Route::resource('/posts','PostsController');
+Route::resource('/users','UserController');
 
 Route::get('/post/tag/{id}','PostsTagController@index')->name('posts.tag.index');
 

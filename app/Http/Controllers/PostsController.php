@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RequestUpdatePost;
 use App\Models\Category;
 use App\Models\Comment;
+use App\Models\Image;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
@@ -26,7 +27,8 @@ class PostsController extends Controller
      */
     public function index()
     {
-        return view('posts.index',['posts'=>Post::all()]);
+        $posts=Post::with('image')->get();
+        return view('posts.index',['posts'=>$posts]);
     }
 
     /**
@@ -52,16 +54,21 @@ class PostsController extends Controller
      */
     public function store(RequestUpdatePost $request)
     {
-        //stocké l'image dans le dossier posts dans storage
-        $path=$request->file('image')->store('posts');
+
         $data=$request->only(['title','description','content']);
-        $data['image']=Storage::url($path);
         $data['user_id']=$request->user()->id;
         $data['category_id']=$request->category;
-        //dd($data);
-         //relier le post à des tags
+        $post=Post::create($data);
+
+        //stocké l'image dans le dossier posts dans storage
+        if($request->hasFile('image')){
+
+            $path=$request->file('image')->store('posts');
+            $url=Storage::url($path);
+            $post->image()->save(Image::make(['path'=>$url]));
+        }
+        //relier le post à des tags
          $tags=$request->tags;
-         $post=Post::create($data);
          $post->tags()->attach($tags);
         $request->session()->flash('success','post was created successefuly!');
         return redirect()->route('posts.index');
@@ -76,9 +83,8 @@ class PostsController extends Controller
     public function show($id)
     {
         $post=Post::find($id);
-        $posts=Post::where('user_id',$post->user_id)->get();
+        $posts=Post::where('user_id',$post->user_id)->with('image')->get();
         $comments=Comment::take(5)->orderBy('updated_at','desc')->get();
-        $comment=Comment::first();
         //utilisation du cache
         // $post=Cache::remember("post-show-{$id}",60,function() use ($id){
         //     return Post::find($id); 
@@ -90,7 +96,7 @@ class PostsController extends Controller
         return view('posts.show',[
             'post'=>$post,
             'postsOfUser'=>$posts,
-            'comments'=>$comments
+            'comments'=>$comments,
         ]);
     }
 
@@ -125,18 +131,19 @@ class PostsController extends Controller
         $data=$request->only(['title','description','content']);
         $post=Post::find($id);
         $this->authorize("update",$post);
+        $data['user_id']=$request->user()->id;
+        $data['category_id']=$request->category;
+        $post->update($data);
         if($request->hasFile('image')){
             Storage::delete($post->image);
             $path=$request->file('image')->store('posts');
-            $data['image']=Storage::url($path);
+            $url=Storage::url($path);
         }
-        $data['user_id']=$request->user()->id;
-        $data['category_id']=$request->category;
+        $post->image()->save(Image::make(['path'=>$url]));
         //relier le post à des tags
         $tags=$request->tags;
         $post->tags()->sync($tags);
          
-        $post->update($data);
         $request->session()->flash('success','post was updated successufuly !');
         return redirect()->route('posts.show',$post->id);
     }
