@@ -2,7 +2,7 @@
 @section('content')
 <div class="row">
   <div class="col-8"><div class="d-flex justify-content-end mb-2">
-        <a href="{{route('tags.create')}}" class="btn btn-success">Add Tag</a>
+        <a href="{{route('tags.create')}}" class="btn btn-success">{{__('Add')}} Tag</a>
     </div>
     <div class="card card-default">
         <div class="card-header">Tags
@@ -21,14 +21,14 @@
                        @if(!$tag->deleted_at)
                             @can("update",$tag)
                             <a href="{{route('tags.edit',$tag->id
-                            )}}" class="btn btn-success">EDIT</a>
+                            )}}" class="btn btn-success">{{__('Edit')}}</a>
                             @endcan
                             @can("delete",$tag)
                             <form class="d-inline" action="{{route('tags.destroy',$tag->id
                             )}}" method="POST" >
                                @csrf
                                @method('DELETE')
-                               <button class="btn btn-primary">archive</button>
+                               <button class="btn btn-primary">{{__('Archive')}}</button>
                              </form>
                              @endcan
                              @else
@@ -37,7 +37,7 @@
                                   )}}" method="POST" >
                                      @csrf
                                      @method('PATCH')
-                                     <input type="submit" value="restore" class="btn btn-success" />
+                                     <input type="submit" value="{{__('Restore')}}" class="btn btn-success" />
                                  </form>
                                @endcan
                                @can("forceDelete",$tag)
@@ -45,7 +45,7 @@
                                   )}}" method="POST" >
                                       @csrf
                                       @method('DELETE')
-                                      <button class="btn btn-danger">delete</button>
+                                      <button class="btn btn-danger">{{__('Delete')}}</button>
                                   </form>
                                 @endcan
                             @endif

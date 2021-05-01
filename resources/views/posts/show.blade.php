@@ -6,17 +6,17 @@
             
             <div class="card card-default">
                 <div class="card-body">
-                            <x-card src="{{$post->image->path}}" title="{{$post->title}}" description="{{$post->description}}" content="{{$post->content}}">
+                            <x-card src="{{isset($post->image) ? $post->image->path : ''}}" title="{{$post->title}}" description="{{$post->description}}" content="{{$post->content}}">
                                 @can("update",$post)
                                     <a href="{{route('posts.edit',$post->id
-                                        )}}" class="btn btn-success">EDIT</a>
+                                        )}}" class="btn btn-success">{{__('Edit')}}</a>
                                 @endcan
                                 @can('delete',$post)
                                     <form class="d-inline" action="{{route('posts.destroy',$post->id
                                         )}}" method="POST" >
                                            @csrf
                                            @method('DELETE')
-                                           <button class="btn btn-danger">delete</button>
+                                           <button class="btn btn-danger">{{__('Delete')}}</button>
                                     </form>
                                 @endcan
                             </x-card>
@@ -24,7 +24,7 @@
             </div>
             <div class="card text-left my-3">
               <div class="card-body">
-                <h4 class="card-title">add Comment</h4>
+                <h4 class="card-title">{{__('Add')}} un {{__('Comment')}}</h4>
                 <p class="card-text">
                     @include('comments.form',['postId'=>$post->id])
                 </p>
@@ -32,7 +32,7 @@
             </div>
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Comments</h4>
+                    <h4 class="card-title">{{__('Comment')}}s</h4>
                 </div>
                 <ul class="list-group list-group-flush">
                     @foreach($comments as $comment)
@@ -47,7 +47,7 @@
         <div class="col-4">
             <div class="card">
               <div class="card-body">
-                <h4 class="card-title">Posts published By the same seller</h4>
+                <h4 class="card-title">{{__('Posts Published By The Same Seller')}}</h4>
               </div>
               <ul class="list-group list-group-flush">
                 @foreach($postsOfUser as $post)

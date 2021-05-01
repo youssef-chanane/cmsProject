@@ -68,7 +68,7 @@
                                       <div class="card-body">
                                         <h4 class="card-title">{{ Auth::user()->name }}</h4>
                                         <p class="card-text">
-                                            <a href="{{route('users.edit',Auth::user()->id)}}" class="mx-auto my-2 btn btn-success">Modify Profile</a>
+                                            <a href="{{route('users.edit',Auth::user()->id)}}" class="mx-auto my-2 btn btn-success">{{__('Modify')}}</a>
                                             <a class="dropdown-item" href="{{ route('logout') }}"
                                            onclick="event.preventDefault();
                                                          document.getElementById('logout-form').submit();">

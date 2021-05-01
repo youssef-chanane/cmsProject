@@ -2,7 +2,7 @@
 @section('content')
 <div class="row">
   <div class="col-8"><div class="d-flex justify-content-end mb-2">
-        <a href="{{route('categories.create')}}" class="btn btn-success">Add Category</a>
+        <a href="{{route('categories.create')}}" class="btn btn-success">{{__('Add')}} Category</a>
     </div>
     <div class="card card-default">
         <div class="card-header">Categories
@@ -17,12 +17,12 @@
                 @foreach ($categories as $category) 
                    <li class="list-group-item">
                            {{$category->name}}
-                           <p class="fs-5 fst-italic text-muted">created by : {{$category->user->name}}</p> 
-                           <p class="fs-5 fst-italic text-muted">number of posts : {{$category->posts_count}}</p> 
+                           <p class="fs-5 fst-italic text-muted">{{__('Created By')}} : {{$category->user->name}}</p> 
+                           <p class="fs-5 fst-italic text-muted">{{__('Number Of Posts')}} : {{$category->posts_count}}</p> 
                            @if(!$category->deleted_at)
                                 @can("update",$category)
                                   <a href="{{route('categories.edit',$category->id
-                                  )}}" class="btn btn-success">EDIT</a>
+                                  )}}" class="btn btn-success">{{__('Edit')}}</a>
                                 @endcan
                                 @can("delete",$category)
                                   @if($category->posts_count==0)
@@ -30,7 +30,7 @@
                                   )}}" method="POST" >
                                      @csrf
                                      @method('DELETE')
-                                     <button class="btn btn-primary">archive</button>
+                                     <button class="btn btn-primary">{{__('Archive')}}</button>
                                  </form>
                                  @endif
                                @endcan
@@ -40,7 +40,7 @@
                                   )}}" method="POST" >
                                      @csrf
                                      @method('PATCH')
-                                     <input type="submit" value="restore" class="btn btn-success" />
+                                     <input type="submit" value="{{__('Restore')}}" class="btn btn-success" />
                                  </form>
                                @endcan
                                @can("forceDelete",$category)
@@ -48,7 +48,7 @@
                                   )}}" method="POST" >
                                       @csrf
                                       @method('DELETE')
-                                      <button class="btn btn-danger">delete</button>
+                                      <button class="btn btn-danger">{{__('Delete')}}</button>
                                   </form>
                                 @endcan
                                {{-- <button type="button" class="btn btn-danger" id="handleDeleteModal">
@@ -93,12 +93,12 @@
   <div class="col-4">
     <div class="card">
       <div class="card-body">
-        <h4 class="card-title">Most Interactive users</h4>
+        <h4 class="card-title">{{__('Most Interactive Users')}}</h4>
       </div>
       <ul class="list-group list-group-flush">
         @foreach($interactiveUsers as $user)
           <li class="list-group-item">{{$user->name}}
-          <p class="text-muted">number of posts :
+          <p class="text-muted">{{__('Number Of Posts')}} :
             <x-badge type="success">{{$user->categories_count}}</x-badge>
           </p>
           </li>
