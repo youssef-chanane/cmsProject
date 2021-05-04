@@ -25,9 +25,14 @@ class PostsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts=Post::with('image')->get();
+        $search=$request->search;
+        if($search){
+            $posts=Post::with('image')->where('title','LIKE',"%{$search}%")->simplePaginate(6);
+        }else{
+            $posts=Post::with('image')->simplePaginate(6);
+        }
         return view('posts.index',['posts'=>$posts]);
     }
 

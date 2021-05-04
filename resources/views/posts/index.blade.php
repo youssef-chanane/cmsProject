@@ -7,7 +7,18 @@
                 <a href="{{route('posts.create')}}" class="btn btn-success">{{__('Add')}} Post</a>
             </div>
             <div class="card card-default">
-                <div class="card-header">Posts</div>
+                <div class="card-header d-flex bd-highlight mb-3">
+                    <div class="col-6" style="display: flex">
+                        <p class="p-2 bd-highlight">Posts</p> 
+                        <div class="flex-end ms-auto p-2 bd-highlight">{{$posts->appends(['search'=>request()->query('search')])->links()}}</div>
+                    </div>
+                   <div class="col-6">
+                       <form action="{{route('posts.index')}}" method="GET" class="input-group">
+                       <input type="text" value="{{request()->query('search')}}" class="form-control" name="search" placeholder="search">
+                        <button class="search-button">
+                    </form>                
+                   </div>
+                </div>
                 <div class="card-body">
                     <ul class="list-group d-flex flex-wrap justify-content-center flex-row">
                         @foreach ($posts as $post)
@@ -21,6 +32,7 @@
                 </div>
             </div>
         </div>
+        
     </div>
 </div>
     
